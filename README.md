@@ -19,12 +19,9 @@ With my code, you can:
 ## Trained models
 
 You could find my trained model at **trained_models/tetris**
- 
-## Requirements
 
-* **python 3.6**
-* **PIL**
-* **cv2**
-* **pytorch** 
-* **numpy**
-* **matplotlib**
+## Prerequisite
+```
+apt update
+apt install python3-opencv
+```
