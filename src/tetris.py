@@ -230,6 +230,10 @@ class Tetris:
 
         return score, self.gameover
 
+    def get_mask(self):
+        mask = np.array(self.board) != 0
+        return mask
+
     def render(self, video=None):
         if not self.gameover:
             img = [self.piece_colors[p] for row in self.get_current_board_state() for p in row]
