@@ -12,13 +12,19 @@ class TetrisEnv(gym.Env):
         self.action_space = gym.spaces.MultiDiscrete([width, 4])
         self.observation_space = gym.spaces.Dict({
             "board": gym.spaces.Box(low=0, high=1, shape=(height, width), dtype=np.uint8),
+            "board_property": gym.spaces.Box(low=0, high=255, shape=(4,), dtype=np.uint8),
             "next_piece": gym.spaces.Discrete(len(self.tetris.pieces))
         })
 
 
     def reset(self, seed=0) -> np.ndarray:
-        self.tetris.reset()
-        return self.__get_state(), {}
+        property = self.tetris.reset()
+        obs = {
+            "board": self.tetris.get_mask(),
+            "board_property": property.numpy().astype(np.uint8),
+            "next_piece": self.tetris.ind
+        }
+        return obs, {}
         
 
     def step(self, action: Tuple[int, int]) -> Tuple[np.ndarray, float, bool, dict]:        
@@ -27,9 +33,9 @@ class TetrisEnv(gym.Env):
         # Ensure the piece's horizontal position does not exceed the maximum valid position
         x = min(x, self.tetris.width - len(self.tetris.piece[0]))
         
-        reward, done = self.tetris.step((x, num_rotations))
+        reward, done, obs = self.tetris.step((x, num_rotations))
         
-        return self.__get_state(), reward, done, False, {}
+        return obs, reward, done, False, {}
 
 
     def render(self, mode="human"):
@@ -38,10 +44,3 @@ class TetrisEnv(gym.Env):
 
     def close(self):
         pass
-
-
-    def __get_state(self):
-        return {
-            "board": self.tetris.get_mask(),
-            "next_piece": self.tetris.ind
-        }

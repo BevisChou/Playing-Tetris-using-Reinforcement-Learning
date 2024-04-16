@@ -228,7 +228,14 @@ class Tetris:
         if self.gameover:
             self.score -= 2
 
-        return score, self.gameover
+        bumpiness, height = self.get_bumpiness_and_height(self.board)
+        obs = {
+            "board": self.get_mask(),
+            "board_property": np.array([lines_cleared, self.get_holes(self.board), bumpiness, height], dtype=np.uint8),
+            "next_piece": self.ind
+        }
+
+        return score, self.gameover, obs
 
     def get_mask(self):
         mask = np.array(self.board) != 0
