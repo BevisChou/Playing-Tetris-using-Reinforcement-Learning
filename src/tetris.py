@@ -231,7 +231,7 @@ class Tetris:
         bumpiness, height = self.get_bumpiness_and_height(self.board)
         obs = {
             "board": self.get_mask(),
-            "board_property": np.array([lines_cleared, self.get_holes(self.board), bumpiness, height], dtype=np.uint8),
+            # "board_property": np.array([lines_cleared, self.get_holes(self.board), bumpiness, height], dtype=np.uint8),
             "next_piece": self.ind
         }
 

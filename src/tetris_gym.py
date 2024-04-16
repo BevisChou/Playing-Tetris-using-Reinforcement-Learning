@@ -12,7 +12,7 @@ class TetrisEnv(gym.Env):
         self.action_space = gym.spaces.MultiDiscrete([width, 4])
         self.observation_space = gym.spaces.Dict({
             "board": gym.spaces.Box(low=0, high=1, shape=(height, width), dtype=np.uint8),
-            "board_property": gym.spaces.Box(low=0, high=255, shape=(4,), dtype=np.uint8),
+            # "board_property": gym.spaces.Box(low=0, high=255, shape=(4,), dtype=np.uint8),
             "next_piece": gym.spaces.Discrete(len(self.tetris.pieces))
         })
 
@@ -21,7 +21,7 @@ class TetrisEnv(gym.Env):
         property = self.tetris.reset()
         obs = {
             "board": self.tetris.get_mask(),
-            "board_property": property.numpy().astype(np.uint8),
+            # "board_property": property.numpy().astype(np.uint8),
             "next_piece": self.tetris.ind
         }
         return obs, {}
