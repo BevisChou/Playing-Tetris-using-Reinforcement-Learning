@@ -6,6 +6,13 @@ check_env(env)
 
 from stable_baselines3 import A2C
 
-model = A2C("MultiInputPolicy", env, verbose=1, tensorboard_log="./log/a2c")
-model.learn(total_timesteps=1_000, tb_log_name="first_run")
+load = True # Please set this accordingly
+
+model = None
+if load:
+    model = A2C.load("models/a2c", env=env, verbose=1, tensorboard_log="./log/a2c")
+else:
+    model = A2C("MultiInputPolicy", env=env, verbose=1, tensorboard_log="./log/a2c")
+
+model.learn(total_timesteps=500_000, tb_log_name="a2c", reset_num_timesteps=not load)
 model.save("models/a2c")
