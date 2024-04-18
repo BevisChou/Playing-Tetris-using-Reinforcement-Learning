@@ -1,12 +1,14 @@
 from src.tetris_gym import TetrisEnv
 from stable_baselines3.common.env_checker import check_env
+from stable_baselines3.common.env_util import make_vec_env
 
 env = TetrisEnv()
 check_env(env)
+# env = make_vec_env(TetrisEnv, n_envs=30)
 
 from stable_baselines3 import A2C
 
-load = True # Please set this accordingly
+load = False # Please set this accordingly
 
 model = None
 if load:
