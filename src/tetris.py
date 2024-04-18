@@ -65,7 +65,13 @@ class Tetris:
         self.piece = [row[:] for row in self.pieces[self.ind]]
         self.current_pos = {"x": self.width // 2 - len(self.piece[0]) // 2, "y": 0}
         self.gameover = False
-        return self.get_state_properties(self.board)
+        
+        info = {
+            "lines_cleared": 0,
+            "holes": 0,
+            "height": 0
+        }
+        return info
 
     def rotate(self, piece):
         num_rows_orig = num_cols_new = len(piece)
@@ -234,8 +240,13 @@ class Tetris:
             # "board_property": np.array([lines_cleared, self.get_holes(self.board), bumpiness, height], dtype=np.uint8),
             "next_piece": self.ind
         }
+        info = {
+            "lines_cleared": lines_cleared,
+            "holes": self.get_holes(self.board),
+            "height": height
+        }
 
-        return score, self.gameover, obs
+        return score, self.gameover, obs, info
 
     def get_mask(self):
         mask = np.array(self.board) != 0

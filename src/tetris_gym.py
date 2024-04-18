@@ -18,7 +18,7 @@ class TetrisEnv(gym.Env):
 
 
     def reset(self, seed=0) -> np.ndarray:
-        property = self.tetris.reset()
+        self.last_property = self.tetris.reset()
         obs = {
             "board": self.tetris.get_mask(),
             # "board_property": property.numpy().astype(np.uint8),
@@ -33,7 +33,15 @@ class TetrisEnv(gym.Env):
         # Ensure the piece's horizontal position does not exceed the maximum valid position
         x = min(x, self.tetris.width - len(self.tetris.piece[0]))
         
-        reward, done, obs = self.tetris.step((x, num_rotations))
+        _, done, obs, info = self.tetris.step((x, num_rotations))
+        
+        reward = 5.0 + 1000 * info["lines_cleared"]
+        if info["height"] > self.last_property["height"]:
+            reward -=  5 * (info["height"] - self.last_property["height"])
+        if info["holes"] < self.last_property["holes"]:
+            reward += 10 * (self.last_property["holes"] - info["holes"])
+        
+        self.last_property = info
         
         return obs, reward, done, False, {}
 
