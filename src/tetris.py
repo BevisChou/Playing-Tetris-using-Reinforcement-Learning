@@ -65,7 +65,7 @@ class Tetris:
         self.piece = [row[:] for row in self.pieces[self.ind]]
         self.current_pos = {"x": self.width // 2 - len(self.piece[0]) // 2, "y": 0}
         self.gameover = False
-        
+
         info = {
             "lines_cleared": 0,
             "holes": 0,
@@ -101,17 +101,24 @@ class Tetris:
             num_holes += len([x for x in col[row + 1:] if x == 0])
         return num_holes
 
-    def get_bumpiness_and_height(self, board):
+    def get_heights(self, board):
         board = np.array(board)
         mask = board != 0
         invert_heights = np.where(mask.any(axis=0), np.argmax(mask, axis=0), self.height)
-        heights = self.height - invert_heights
+        return self.height - invert_heights
+
+    def get_bumpiness_and_height(self, board):
+        heights = self.get_heights(board)
         total_height = np.sum(heights)
         currs = heights[:-1]
         nexts = heights[1:]
         diffs = np.abs(currs - nexts)
         total_bumpiness = np.sum(diffs)
         return total_bumpiness, total_height
+    
+    def get_max_height(self, board):
+        heights = self.get_heights(board)
+        return np.max(heights)
 
     def get_next_states(self):
         states = {}
@@ -234,7 +241,7 @@ class Tetris:
         if self.gameover:
             self.score -= 2
 
-        bumpiness, height = self.get_bumpiness_and_height(self.board)
+        # bumpiness, height = self.get_bumpiness_and_height(self.board)
         obs = {
             "board": self.get_mask(),
             # "board_property": np.array([lines_cleared, self.get_holes(self.board), bumpiness, height], dtype=np.uint8),
@@ -243,7 +250,7 @@ class Tetris:
         info = {
             "lines_cleared": lines_cleared,
             "holes": self.get_holes(self.board),
-            "height": height
+            "height": self.get_max_height(self.board)
         }
 
         return score, self.gameover, obs, info
