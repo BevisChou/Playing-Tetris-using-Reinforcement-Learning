@@ -279,5 +279,5 @@ class Tetris:
         if video:
             video.write(img)
 
-        # cv2.imshow("Deep Q-Learning Tetris", img)
-        cv2.waitKey(1)
+        #cv2.imshow("Deep Q-Learning Tetris", img)
+        #cv2.waitKey(1)
